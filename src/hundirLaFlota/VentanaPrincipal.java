@@ -23,8 +23,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form VentanaPrincipal
      */
+    String[][] miTablero;
+    String[][] suTablero;
+    
     public VentanaPrincipal() {
         initComponents();
+        setLocationRelativeTo(null);
+        //generar los array bidimensionales para los valores de las casillas
+        GridLayout gridLayout = (GridLayout) jpn_miTablero.getLayout();
+        miTablero = new String[gridLayout.getRows()][gridLayout.getColumns()];
+        gridLayout = (GridLayout) jpn_suTablero.getLayout();
+        miTablero = new String[gridLayout.getRows()][gridLayout.getColumns()];
+        
+        
+        
         cargarMiTablero();
         cargarSuTablero();
     }
@@ -42,6 +54,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jpn_miTablero = new javax.swing.JPanel();
         jpn_suTablero = new javax.swing.JPanel();
         jpn_barraArriba = new javax.swing.JPanel();
+        btn_generarTablero = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -58,15 +71,28 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jpn_barraArriba.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        btn_generarTablero.setText("Generar Mi Tablero");
+        btn_generarTablero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_generarTableroActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpn_barraArribaLayout = new javax.swing.GroupLayout(jpn_barraArriba);
         jpn_barraArriba.setLayout(jpn_barraArribaLayout);
         jpn_barraArribaLayout.setHorizontalGroup(
             jpn_barraArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jpn_barraArribaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btn_generarTablero, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jpn_barraArribaLayout.setVerticalGroup(
             jpn_barraArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jpn_barraArribaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btn_generarTablero)
+                .addContainerGap(71, Short.MAX_VALUE))
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -125,6 +151,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_generarTableroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generarTableroActionPerformed
+        // TODO add your handling code here:
+        generarMiTablero generarMiTablero = new generarMiTablero();
+        generarMiTablero.setVisible(true);
+    }//GEN-LAST:event_btn_generarTableroActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -161,6 +193,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_generarTablero;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -284,10 +317,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                 String[] partes = nombreComp.split("-");
                                 int fila = Integer.parseInt(partes[0]);
                                 int columna = Integer.parseInt(partes[1]);
-                                System.out.println("Click en mi tablero en Fila " + fila + " columna " + columna);
-//                            jpn_miTablero.get
-//                            jpn_miTablero.remove(comp);
-
+                                System.out.println("Click en su tablero en Fila " + fila + " columna " + columna);
                             }
                         }
 
