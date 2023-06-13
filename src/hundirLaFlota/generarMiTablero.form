@@ -145,11 +145,11 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="btn_izquierdaBarco" min="-2" pref="48" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
-                                          <Component id="btn_derecharBarco" min="-2" pref="48" max="-2" attributes="0"/>
+                                          <Component id="btn_derechaBarco" min="-2" pref="48" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btn_confirmarBarco" min="-2" pref="77" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
@@ -173,14 +173,14 @@
                                   <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="btn_izquierdaBarco" min="-2" pref="40" max="-2" attributes="0"/>
-                                      <Component id="btn_derecharBarco" min="-2" pref="40" max="-2" attributes="0"/>
+                                      <Component id="btn_derechaBarco" min="-2" pref="40" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                                   <Component id="btn_bajarBarco" min="-2" pref="40" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-                                  <Component id="jButton1" min="-2" pref="65" max="-2" attributes="0"/>
+                                  <Component id="btn_confirmarBarco" min="-2" pref="65" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -229,6 +229,7 @@
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/hundirLaFlota/imagenes/arriba.png"/>
                     </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_arribaBarcoActionPerformed"/>
@@ -239,19 +240,21 @@
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/hundirLaFlota/imagenes/abajo.png"/>
                     </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_bajarBarcoActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btn_derecharBarco">
+                <Component class="javax.swing.JButton" name="btn_derechaBarco">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/hundirLaFlota/imagenes/derecha.png"/>
                     </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_derecharBarcoActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_derechaBarcoActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btn_izquierdaBarco">
@@ -259,15 +262,22 @@
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/hundirLaFlota/imagenes/izquierda.png"/>
                     </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_izquierdaBarcoActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="jButton1">
+                <Component class="javax.swing.JButton" name="btn_confirmarBarco">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="jButton1"/>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/hundirLaFlota/imagenes/tick.png"/>
+                    </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_confirmarBarcoActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
