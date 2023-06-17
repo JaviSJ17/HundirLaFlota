@@ -148,9 +148,11 @@
                                           <Component id="btn_derechaBarco" min="-2" pref="48" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="btn_confirmarBarco" min="-2" pref="77" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="btn_confirmarBarco" max="32767" attributes="0"/>
+                                      <Component id="btn_guardarTablero" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
                               <Component id="btn_añadirBarco" alignment="1" pref="317" max="32767" attributes="0"/>
@@ -168,7 +170,7 @@
                           <Component id="btn_añadirBarco" min="-2" pref="49" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="btn_arribaBarco" min="-2" pref="40" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
@@ -177,10 +179,13 @@
                                   </Group>
                                   <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                                   <Component id="btn_bajarBarco" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                                   <Component id="btn_confirmarBarco" min="-2" pref="65" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="btn_guardarTablero" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -277,6 +282,17 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_confirmarBarcoActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btn_guardarTablero">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Segoe UI" size="18" style="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Guardar"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_guardarTableroActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

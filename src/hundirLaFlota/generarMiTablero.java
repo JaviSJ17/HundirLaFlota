@@ -32,7 +32,8 @@ public class generarMiTablero extends javax.swing.JFrame {
         GridLayout gridLayout = (GridLayout) jpn_generarMiTablero.getLayout();
         miTablero = new String[gridLayout.getRows()][gridLayout.getColumns()];
         lst_barcos.setModel(dlm_listaBarcos);
-        generarListaDeBarcos();
+        generarListaBarcos();
+        generarArrayMiTablero();
         generarMiTablero();
     }
 
@@ -58,6 +59,7 @@ public class generarMiTablero extends javax.swing.JFrame {
         btn_derechaBarco = new javax.swing.JButton();
         btn_izquierdaBarco = new javax.swing.JButton();
         btn_confirmarBarco = new javax.swing.JButton();
+        btn_guardarTablero = new javax.swing.JButton();
 
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -125,6 +127,14 @@ public class generarMiTablero extends javax.swing.JFrame {
             }
         });
 
+        btn_guardarTablero.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_guardarTablero.setText("Guardar");
+        btn_guardarTablero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_guardarTableroActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -143,9 +153,10 @@ public class generarMiTablero extends javax.swing.JFrame {
                                 .addComponent(btn_izquierdaBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(58, 58, 58)
                                 .addComponent(btn_derechaBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btn_confirmarBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btn_confirmarBarco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_guardarTablero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btn_añadirBarco, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE))
                 .addContainerGap())
@@ -166,10 +177,13 @@ public class generarMiTablero extends javax.swing.JFrame {
                             .addComponent(btn_izquierdaBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_derechaBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(11, 11, 11)
-                        .addComponent(btn_bajarBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_bajarBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(btn_confirmarBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btn_confirmarBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn_guardarTablero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -230,48 +244,52 @@ public class generarMiTablero extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_añadirBarcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_añadirBarcoActionPerformed
-        btn_confirmarBarco.setEnabled(true);
-        btn_añadirBarco.setEnabled(false);
-        btn_arribaBarco.setEnabled(true);
-        btn_bajarBarco.setEnabled(true);
-        btn_derechaBarco.setEnabled(true);
-        btn_izquierdaBarco.setEnabled(true);
-
         int indice = lst_barcos.getSelectedIndex();
-        longitudBarco = 3;
-        int longitudBarcoAAñadir = longitudBarco;
+        //obtener el barco selecionado para saber su longitud
+        if (indice != -1) { // si hay algo selecionado
+            btn_confirmarBarco.setEnabled(true);
+            btn_añadirBarco.setEnabled(false);
+            btn_arribaBarco.setEnabled(true);
+            btn_bajarBarco.setEnabled(true);
+            btn_derechaBarco.setEnabled(true);
+            btn_izquierdaBarco.setEnabled(true);
 
-        for (Component component : jpn_generarMiTablero.getComponents()) {
-            String nombreComponente = component.getName();
-            if (nombreComponente != null) {
-                // obtener fila y columna del componente
-                String[] partes = nombreComponente.split("-");
-                int fila = Integer.parseInt(partes[0]);
-                int columna = Integer.parseInt(partes[1]);
-                // saber si es del panel jugable
-                if (fila > 0 && columna > 0) {
-                    // saber si esta en la zona azul
-                    if (columna == 10) {
-                        // toDo: comprobar longitud del barco
-                        if (longitudBarcoAAñadir > 0) {
-                            JPanel panel = (JPanel) component;
-                            panel.setName(fila + "-" + columna + "-" + "moviendo");
-                            miTablero[fila][columna] = "moviendo";
-                            panel.setBackground(Color.red);
-                            longitudBarcoAAñadir = longitudBarcoAAñadir - 1;
+            String selecion = (String) dlm_listaBarcos.get(indice);
+            String[] parte = selecion.split(" ");
+            int numero = Integer.parseInt(parte[2]);
+            longitudBarco = numero;
+            dlm_listaBarcos.remove(indice);
+
+            int longitudBarcoAAñadir = longitudBarco;
+
+            for (Component component : jpn_generarMiTablero.getComponents()) {
+                String nombreComponente = component.getName();
+                if (nombreComponente != null) {
+                    // obtener fila y columna del componente
+                    String[] partes = nombreComponente.split("-");
+                    int fila = Integer.parseInt(partes[0]);
+                    int columna = Integer.parseInt(partes[1]);
+                    // saber si es del panel jugable
+                    if (fila > 0 && columna > 0) {
+                        // saber si esta en la zona azul
+                        if (columna == 10) {
+                            // toDo: comprobar longitud del barco
+                            if (longitudBarcoAAñadir > 0) {
+                                JPanel panel = (JPanel) component;
+                                panel.setName(fila + "-" + columna + "-" + "moviendo");
+                                miTablero[fila][columna] = "moviendo";
+                                panel.setBackground(Color.red);
+                                longitudBarcoAAñadir = longitudBarcoAAñadir - 1;
+                            }
                         }
-                    }
 
+                    }
                 }
+
             }
+        } else {
 
         }
-        // obtener el barco selecionado para saber su longitud
-//        if (indice != -1) { // si hay algo selecionado
-//
-//        } else {
-//
-//        }
     }//GEN-LAST:event_btn_añadirBarcoActionPerformed
 
     private void btn_bajarBarcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_bajarBarcoActionPerformed
@@ -291,12 +309,7 @@ public class generarMiTablero extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_izquierdaBarcoActionPerformed
 
     private void btn_confirmarBarcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confirmarBarcoActionPerformed
-        btn_confirmarBarco.setEnabled(false);
-        btn_añadirBarco.setEnabled(true);
-        btn_arribaBarco.setEnabled(false);
-        btn_bajarBarco.setEnabled(false);
-        btn_derechaBarco.setEnabled(false);
-        btn_izquierdaBarco.setEnabled(false);
+        boolean valido = false;
         for (Component component : jpn_generarMiTablero.getComponents()) {
             String nombreComponente = component.getName();
             if (nombreComponente != null) {
@@ -305,16 +318,31 @@ public class generarMiTablero extends javax.swing.JFrame {
                 int fila = Integer.parseInt(partes[0]);
                 int columna = Integer.parseInt(partes[1]);
                 // saber si es del panel jugable
-                if (fila > 0 && columna > 0) {
+                if (fila > 0 && columna > 0 && columna < 10) {
                     // si es el elemento que tiene que moverse
                     if (miTablero[fila][columna].equalsIgnoreCase("moviendo")) {
                         miTablero[fila][columna] = "barco";
+                        valido = true;
                     }
                 }
             }
         }
+        if (valido) {
+            btn_confirmarBarco.setEnabled(false);
+            btn_añadirBarco.setEnabled(true);
+            btn_arribaBarco.setEnabled(false);
+            btn_bajarBarco.setEnabled(false);
+            btn_derechaBarco.setEnabled(false);
+            btn_izquierdaBarco.setEnabled(false);
+        }
         actualizarTablero();
     }//GEN-LAST:event_btn_confirmarBarcoActionPerformed
+
+    private void btn_guardarTableroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarTableroActionPerformed
+        // TODO add your handling code here:
+        ventanaMenu.miTablero = miTablero;
+        setVisible(false);
+    }//GEN-LAST:event_btn_guardarTableroActionPerformed
 
     private void actualizarTablero() {
         for (Component component : jpn_generarMiTablero.getComponents()) {
@@ -392,6 +420,7 @@ public class generarMiTablero extends javax.swing.JFrame {
     private javax.swing.JButton btn_bajarBarco;
     private javax.swing.JButton btn_confirmarBarco;
     private javax.swing.JButton btn_derechaBarco;
+    private javax.swing.JButton btn_guardarTablero;
     private javax.swing.JButton btn_izquierdaBarco;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -428,12 +457,6 @@ public class generarMiTablero extends javax.swing.JFrame {
                 } else { // zona de panel jugable
                     // añadir linea azul derecha
                     if (columna == 10) {
-                        /*
-                        cada panel 3 valores:
-                        -agua
-                        -barco
-                        -moviendo
-                         */
                         JPanel panel = new JPanel();
                         panel.setName(fila + "-" + columna + "-" + "agua");
                         panel.setBackground(Color.CYAN);
@@ -521,7 +544,7 @@ public class generarMiTablero extends javax.swing.JFrame {
         return numero;
     }
 
-    private void generarListaDeBarcos() {
+    private void generarArrayMiTablero() {
         GridLayout gridLayout = (GridLayout) jpn_generarMiTablero.getLayout();
         for (int fila = 0; fila < gridLayout.getRows(); fila++) {
             for (int columna = 0; columna < gridLayout.getColumns(); columna++) {
@@ -595,10 +618,10 @@ public class generarMiTablero extends javax.swing.JFrame {
                     if (filaActual > 0 && columnaActual > 0) {
                         // si es el elemento que tiene que moverse
                         if (miTablero[filaActual][columnaActual].equalsIgnoreCase("moviendo")) {
-                            System.out.println("Se va a mover la fila " + filaActual + " y la columna " + columnaActual);
+//                            System.out.println("Se va a mover la fila " + filaActual + " y la columna " + columnaActual);
                             // si no se sale de las filas
                             if ((columnaActual - columnasAMover) > 0) {
-                                System.out.println("Se va a mover a fila " + filaActual + " y la columna " + (columnaActual - columnasAMover) + " con valor moviendo");
+//                                System.out.println("Se va a mover a fila " + filaActual + " y la columna " + (columnaActual - columnasAMover) + " con valor moviendo");
                                 miTablero[filaActual][columnaActual] = "agua";
                                 miTablero[filaActual][columnaActual - columnasAMover] = "moviendo";
                                 vecesAMover = vecesAMover - 1;
@@ -626,7 +649,7 @@ public class generarMiTablero extends javax.swing.JFrame {
                 if (fila > 0 && columna > 0) {
                     // si es el elemento que tiene que moverse
                     if (miTablero[fila][columna].equalsIgnoreCase("moviendo")) {
-                        System.out.println("Se va a mover la fila " + fila + " y la columna " + columna);
+//                        System.out.println("Se va a mover la fila " + fila + " y la columna " + columna);
                         // si no se sale de las filas
                         if ((fila - 1) > 0) {
                             if (hayBarcoEnEsaPosicion(fila - 1, columna)) {
@@ -636,10 +659,10 @@ public class generarMiTablero extends javax.swing.JFrame {
                                 // si es el ultimo panel que se mueve
                                 if (vecesAMover == 1) {
                                     miTablero[fila][columna] = "agua";
-                                    System.out.println("Se va a mover a fila " + (fila - 1) + " y la columna " + columna + " con valor moviendo");
+//                                    System.out.println("Se va a mover a fila " + (fila - 1) + " y la columna " + columna + " con valor moviendo");
                                     miTablero[fila - 1][columna] = "moviendo";
                                 } else {
-                                    System.out.println("Se va a mover a fila " + (fila - 1) + " y la columna " + columna + " con valor moviendo");
+//                                    System.out.println("Se va a mover a fila " + (fila - 1) + " y la columna " + columna + " con valor moviendo");
                                     miTablero[fila - 1][columna] = "moviendo";
                                 }
                                 vecesAMover = vecesAMover - 1;
@@ -655,7 +678,7 @@ public class generarMiTablero extends javax.swing.JFrame {
     public void moverBarcoSelecionadoAbajo() {
         int vecesAMover = longitudBarco;
         boolean sePuedeMover = true;
-        System.out.println("Se va a mover " + vecesAMover + " veces");
+//        System.out.println("Se va a mover " + vecesAMover + " veces");
         GridLayout gridLayout = (GridLayout) jpn_generarMiTablero.getLayout();
         for (Component component : jpn_generarMiTablero.getComponents()) {
             String nombreComponente = component.getName();
@@ -668,7 +691,7 @@ public class generarMiTablero extends javax.swing.JFrame {
                 if (filaActual > 0 && columnaActual > 0) {
                     // si es el elemento que tiene que moverse
                     if (miTablero[filaActual][columnaActual].equalsIgnoreCase("moviendo")) {
-                        System.out.println("Se va a mover la fila " + filaActual + " y la columna " + columnaActual);
+//                        System.out.println("Se va a mover la fila " + filaActual + " y la columna " + columnaActual);
                         // si no se sale de las filas
                         if ((filaActual + vecesAMover) < gridLayout.getRows()) {
                             // si es el primero panel que se mueve
@@ -679,10 +702,10 @@ public class generarMiTablero extends javax.swing.JFrame {
                                 if (vecesAMover == longitudBarco) {
                                     miTablero[filaActual][columnaActual] = "agua";
 
-                                    System.out.println("Se va a mover a fila " + (filaActual + vecesAMover) + " y la columna " + columnaActual + " con valor moviendo");
+//                                    System.out.println("Se va a mover a fila " + (filaActual + vecesAMover) + " y la columna " + columnaActual + " con valor moviendo");
                                     miTablero[filaActual + vecesAMover][columnaActual] = "moviendo";
                                 } else {
-                                    System.out.println("Se va a mover a fila " + (filaActual + vecesAMover) + " y la columna " + columnaActual + " con valor moviendo");
+//                                    System.out.println("Se va a mover a fila " + (filaActual + vecesAMover) + " y la columna " + columnaActual + " con valor moviendo");
                                     miTablero[filaActual + vecesAMover][columnaActual] = "moviendo";
                                 }
                                 vecesAMover = vecesAMover - 1;
@@ -705,7 +728,7 @@ public class generarMiTablero extends javax.swing.JFrame {
         do {
             sePuedeMover = true;
             for (Component component : jpn_generarMiTablero.getComponents()) {
-                if (cantidadASaltar==0) {
+                if (cantidadASaltar == 0) {
                     String nombreComponente = component.getName();
                     if (nombreComponente != null) {
                         // obtener fila y columna del componente
@@ -716,10 +739,10 @@ public class generarMiTablero extends javax.swing.JFrame {
                         if (filaActual > 0 && columnaActual > 0) {
                             // si es el elemento que tiene que moverse
                             if (miTablero[filaActual][columnaActual].equalsIgnoreCase("moviendo")) {
-                                System.out.println("Se va a mover la fila " + filaActual + " y la columna " + columnaActual);
+//                                System.out.println("Se va a mover la fila " + filaActual + " y la columna " + columnaActual);
                                 // si no se sale de las filas
                                 if ((columnaActual + 1) < 10) {
-                                    System.out.println("Se va a mover a fila " + filaActual + " y la columna " + (columnaActual + columnasAMover) + " con valor moviendo");
+//                                    System.out.println("Se va a mover a fila " + filaActual + " y la columna " + (columnaActual + columnasAMover) + " con valor moviendo");
                                     // comprobar si hay un barco en la nueva posicion
                                     if (hayBarcoEnEsaPosicion(filaActual, columnaActual + columnasAMover)) {
                                         sePuedeMover = false;
@@ -742,13 +765,13 @@ public class generarMiTablero extends javax.swing.JFrame {
         } while (!sePuedeMover);
 
         if (sePuedeMover) {
-            System.out.println("======================================");
-            System.out.println("Se van a mover "+columnasAMover+" columnas");
-            System.out.println("======================================");
-            
+//            System.out.println("======================================");
+//            System.out.println("Se van a mover " + columnasAMover + " columnas");
+//            System.out.println("======================================");
+
             vecesAMover = longitudBarco;
             for (Component component : jpn_generarMiTablero.getComponents()) {
-                if (cantidadASaltar==0) {
+                if (cantidadASaltar == 0) {
                     String nombreComponente = component.getName();
                     if (nombreComponente != null) {
                         // obtener fila y columna del componente
@@ -759,10 +782,10 @@ public class generarMiTablero extends javax.swing.JFrame {
                         if (filaActual > 0 && columnaActual > 0) {
                             // si es el elemento que tiene que moverse
                             if (miTablero[filaActual][columnaActual].equalsIgnoreCase("moviendo")) {
-                                System.out.println("Se va a mover la fila " + filaActual + " y la columna " + columnaActual);
+//                                System.out.println("Se va a mover la fila " + filaActual + " y la columna " + columnaActual);
                                 // si no se sale de las filas
                                 if ((columnaActual + columnasAMover) < 10) {
-                                    System.out.println("Se va a mover a fila " + filaActual + " y la columna " + (columnaActual + columnasAMover) + " con valor moviendo");
+//                                    System.out.println("Se va a mover a fila " + filaActual + " y la columna " + (columnaActual + columnasAMover) + " con valor moviendo");
                                     miTablero[filaActual][columnaActual] = "agua";
                                     miTablero[filaActual][columnaActual + columnasAMover] = "moviendo";
                                     vecesAMover = vecesAMover - 1;
@@ -783,11 +806,18 @@ public class generarMiTablero extends javax.swing.JFrame {
 
     private boolean hayBarcoEnEsaPosicion(int fila, int columna) {
         boolean hayBarco = false;
-        System.out.println("Comprobando si en la fila " + fila + " y en la columa " + columna + " hay un barco");
+//        System.out.println("Comprobando si en la fila " + fila + " y en la columa " + columna + " hay un barco");
         if (miTablero[fila][columna].equalsIgnoreCase("barco")) {
-            System.out.println("  ->  Hay un barco");
+//            System.out.println("  ->  Hay un barco");
             hayBarco = true;
         }
         return hayBarco;
+    }
+
+    private void generarListaBarcos() {
+        dlm_listaBarcos.addElement("Barco de 2");
+        dlm_listaBarcos.addElement("Barco de 3");
+        dlm_listaBarcos.addElement("Barco de 4");
+        dlm_listaBarcos.addElement("Barco de 5");
     }
 }
