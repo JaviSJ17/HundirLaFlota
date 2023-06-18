@@ -21,6 +21,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -42,6 +43,7 @@ public class ventanaPartida extends javax.swing.JFrame {
     public ventanaPartida() {
         initComponents();
         setLocationRelativeTo(null);
+        setIconImage(new ImageIcon(getClass().getResource("imagenes/crucero.png")).getImage());
         cargarMiTablero();
 //        cargarSuTablero();
     }
@@ -376,47 +378,6 @@ public class ventanaPartida extends javax.swing.JFrame {
                     if (miTablero[fila][columna].equalsIgnoreCase("barco")) {
                         panel.setBackground(new Color(150, 150, 150));
                     }
-//                    panel.addMouseListener(new MouseListener() {
-//                        @Override
-//                        public void mouseClicked(MouseEvent e) {
-//                            Component comp = e.getComponent();
-//                            if (comp instanceof JPanel) {
-//                                JPanel panelPulsado = (JPanel) comp;
-//                                String nombreComp = panelPulsado.getName();
-//                                String[] partes = nombreComp.split("-");
-//                                int fila = Integer.parseInt(partes[0]);
-//                                int columna = Integer.parseInt(partes[1]);
-//                                System.out.println("Click en mi tablero en Fila " + fila + " columna " + columna);
-//                                if (miTablero[fila][columna].equalsIgnoreCase("barco")) {
-//                                    panelPulsado.setBackground(Color.red);
-//                                }
-//                                if (miTablero[fila][columna].equalsIgnoreCase("agua")) {
-//                                    panelPulsado.setBackground(Color.blue);
-//                                }
-//
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void mousePressed(MouseEvent e) {
-////                        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//                        }
-//
-//                        @Override
-//                        public void mouseReleased(MouseEvent e) {
-////                        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//                        }
-//
-//                        @Override
-//                        public void mouseEntered(MouseEvent e) {
-////                        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//                        }
-//
-//                        @Override
-//                        public void mouseExited(MouseEvent e) {
-////                        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//                        }
-//                    });
                     jpn_miTablero.add(panel);
                 }
 

@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -29,6 +30,7 @@ public class generarMiTablero extends javax.swing.JFrame {
     public generarMiTablero() {
         initComponents();
         setLocationRelativeTo(null);
+        setIconImage(new ImageIcon(getClass().getResource("imagenes/crucero.png")).getImage());
         GridLayout gridLayout = (GridLayout) jpn_generarMiTablero.getLayout();
         miTablero = new String[gridLayout.getRows()][gridLayout.getColumns()];
         lst_barcos.setModel(dlm_listaBarcos);
@@ -60,6 +62,7 @@ public class generarMiTablero extends javax.swing.JFrame {
         btn_izquierdaBarco = new javax.swing.JButton();
         btn_confirmarBarco = new javax.swing.JButton();
         btn_guardarTablero = new javax.swing.JButton();
+        jpn_mostrarBarcos = new javax.swing.JPanel();
 
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -135,6 +138,19 @@ public class generarMiTablero extends javax.swing.JFrame {
             }
         });
 
+        jpn_mostrarBarcos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout jpn_mostrarBarcosLayout = new javax.swing.GroupLayout(jpn_mostrarBarcos);
+        jpn_mostrarBarcos.setLayout(jpn_mostrarBarcosLayout);
+        jpn_mostrarBarcosLayout.setHorizontalGroup(
+            jpn_mostrarBarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jpn_mostrarBarcosLayout.setVerticalGroup(
+            jpn_mostrarBarcosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -157,15 +173,20 @@ public class generarMiTablero extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btn_confirmarBarco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btn_guardarTablero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_añadirBarco, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE))
+                    .addComponent(btn_añadirBarco, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jpn_mostrarBarcos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                    .addComponent(jpn_mostrarBarcos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(btn_añadirBarco, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -245,6 +266,7 @@ public class generarMiTablero extends javax.swing.JFrame {
 
     private void btn_añadirBarcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_añadirBarcoActionPerformed
         int indice = lst_barcos.getSelectedIndex();
+        
         //obtener el barco selecionado para saber su longitud
         if (indice != -1) { // si hay algo selecionado
             btn_confirmarBarco.setEnabled(true);
@@ -257,6 +279,13 @@ public class generarMiTablero extends javax.swing.JFrame {
             String selecion = (String) dlm_listaBarcos.get(indice);
             String[] parte = selecion.split(" ");
             int numero = Integer.parseInt(parte[2]);
+//            for (Component component : selecion.getComponents()) {
+//                if(component.getName().equalsIgnoreCase("dibujo")){
+//                    JPanel panel = (JPanel) component;
+//                    GridLayout gridLayout = (GridLayout) panel.getLayout();
+//                    numero = gridLayout.getColumns();
+//                }
+//            }
             longitudBarco = numero;
             dlm_listaBarcos.remove(indice);
 
@@ -428,6 +457,7 @@ public class generarMiTablero extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jpn_generarMiTablero;
+    private javax.swing.JPanel jpn_mostrarBarcos;
     private javax.swing.JList<String> lst_barcos;
     // End of variables declaration//GEN-END:variables
 
@@ -465,8 +495,8 @@ public class generarMiTablero extends javax.swing.JFrame {
                     } else { // añadir paneles normales
                         JPanel panel = new JPanel();
                         panel.setName(fila + "-" + columna + "-" + "agua");
-                        panel.setBackground(Color.LIGHT_GRAY);
                         panel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+                        panel.setBackground(Color.LIGHT_GRAY);
                         jpn_generarMiTablero.add(panel);
                     }
                 }
@@ -591,7 +621,6 @@ public class generarMiTablero extends javax.swing.JFrame {
                             if ((columnaActual - columnasAMover) > 0) {
                                 if (hayBarcoEnEsaPosicion(filaActual, columnaActual - columnasAMover)) {
                                     sePuedeMover = false;
-
                                 }
                                 vecesAMover = vecesAMover - 1;
                             }
@@ -618,10 +647,8 @@ public class generarMiTablero extends javax.swing.JFrame {
                     if (filaActual > 0 && columnaActual > 0) {
                         // si es el elemento que tiene que moverse
                         if (miTablero[filaActual][columnaActual].equalsIgnoreCase("moviendo")) {
-//                            System.out.println("Se va a mover la fila " + filaActual + " y la columna " + columnaActual);
                             // si no se sale de las filas
                             if ((columnaActual - columnasAMover) > 0) {
-//                                System.out.println("Se va a mover a fila " + filaActual + " y la columna " + (columnaActual - columnasAMover) + " con valor moviendo");
                                 miTablero[filaActual][columnaActual] = "agua";
                                 miTablero[filaActual][columnaActual - columnasAMover] = "moviendo";
                                 vecesAMover = vecesAMover - 1;
@@ -819,5 +846,16 @@ public class generarMiTablero extends javax.swing.JFrame {
         dlm_listaBarcos.addElement("Barco de 3");
         dlm_listaBarcos.addElement("Barco de 4");
         dlm_listaBarcos.addElement("Barco de 5");
+        dlm_listaBarcos.addElement("Barco de 5");
+        
+        GridLayout gridLayout = new GridLayout(4, 1);
+        jpn_mostrarBarcos.setLayout(gridLayout);
+        jpn_mostrarBarcos.add(new panelListaBarcos(2));
+        jpn_mostrarBarcos.add(new panelListaBarcos(3));
+        jpn_mostrarBarcos.add(new panelListaBarcos(4));
+        jpn_mostrarBarcos.add(new panelListaBarcos(5));
+        jpn_mostrarBarcos.revalidate();
+        jpn_mostrarBarcos.repaint();
     }
+    
 }
