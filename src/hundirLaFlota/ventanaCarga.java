@@ -6,6 +6,7 @@ package hundirLaFlota;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -18,6 +19,7 @@ public class ventanaCarga extends javax.swing.JFrame {
      */
     public ventanaCarga() {
         initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("imagenes/crucero.png")).getImage());
         setLocationRelativeTo(null);
         new Thread(new Runnable() {
             @Override

@@ -339,6 +339,7 @@ public class generarMiTablero extends javax.swing.JFrame {
 
     private void btn_confirmarBarcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confirmarBarcoActionPerformed
         boolean valido = false;
+        Barco barco = new Barco(longitudBarco);
         for (Component component : jpn_generarMiTablero.getComponents()) {
             String nombreComponente = component.getName();
             if (nombreComponente != null) {
@@ -351,11 +352,14 @@ public class generarMiTablero extends javax.swing.JFrame {
                     // si es el elemento que tiene que moverse
                     if (miTablero[fila][columna].equalsIgnoreCase("moviendo")) {
                         miTablero[fila][columna] = "barco";
+                        barco.setPosicion(fila+"-"+columna);
+                        
                         valido = true;
                     }
                 }
             }
         }
+        ventanaMenu.milistaDeBarcos.addElement(barco);
         if (valido) {
             btn_confirmarBarco.setEnabled(false);
             btn_añadirBarco.setEnabled(true);
@@ -845,7 +849,6 @@ public class generarMiTablero extends javax.swing.JFrame {
         dlm_listaBarcos.addElement("Barco de 2");
         dlm_listaBarcos.addElement("Barco de 3");
         dlm_listaBarcos.addElement("Barco de 4");
-        dlm_listaBarcos.addElement("Barco de 5");
         dlm_listaBarcos.addElement("Barco de 5");
         
         GridLayout gridLayout = new GridLayout(4, 1);

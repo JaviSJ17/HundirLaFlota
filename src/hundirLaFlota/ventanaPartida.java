@@ -18,11 +18,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -39,12 +43,16 @@ public class ventanaPartida extends javax.swing.JFrame {
     int puertoRival;
     boolean tableroRivalObtenido = false;
     boolean puedeEnviarCasillaPulsada = true;
+    ServerSocket servidorObtenerListaBarcos = null;
+    HashMap<Integer, Barco> mapaBarcosEnemigos = new HashMap<>();
+    ArrayList<String> listaCasillasPulsadas = new ArrayList<>();
 
     public ventanaPartida() {
         initComponents();
         setLocationRelativeTo(null);
         setIconImage(new ImageIcon(getClass().getResource("imagenes/crucero.png")).getImage());
         cargarMiTablero();
+        lst_barcosRestantes.setModel(ventanaMenu.sulistaDeBarcos);
 //        cargarSuTablero();
     }
 
@@ -68,11 +76,14 @@ public class ventanaPartida extends javax.swing.JFrame {
         txf_ipRival = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         tgb_guardarIPRival = new javax.swing.JToggleButton();
-        jPanel2 = new javax.swing.JPanel();
-        txf_puerto = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txf_puerto = new javax.swing.JTextField();
         btn_activarServidor = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lst_barcosRestantes = new javax.swing.JList<>();
+        jLabel8 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -111,6 +122,19 @@ public class ventanaPartida extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setText("Puerto:");
+
+        jLabel4.setText("Servidor Local");
+
+        txf_puerto.setText("1234");
+
+        btn_activarServidor.setText("Activar");
+        btn_activarServidor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_activarServidorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -132,69 +156,77 @@ public class ventanaPartida extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tgb_guardarIPRival, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(135, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txf_ipRival))
-                        .addGap(8, 8, 8)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txf_puertoRival)))
-                    .addComponent(tgb_guardarIPRival, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        txf_puerto.setText("1234");
-
-        jLabel4.setText("Servidor Local");
-
-        jLabel7.setText("Puerto:");
-
-        btn_activarServidor.setText("Activar");
-        btn_activarServidor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_activarServidorActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txf_puerto, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btn_activarServidor, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(txf_puerto)
+                            .addComponent(btn_activarServidor)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txf_ipRival))
+                                .addGap(8, 8, 8)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txf_puertoRival)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(tgb_guardarIPRival, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap())
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        lst_barcosRestantes.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(lst_barcosRestantes);
+
+        jLabel8.setText("Barcos Restantes");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(txf_puerto)
-                    .addComponent(btn_activarServidor))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(68, 68, 68))
         );
 
         javax.swing.GroupLayout jpn_barraArribaLayout = new javax.swing.GroupLayout(jpn_barraArriba);
@@ -203,13 +235,15 @@ public class ventanaPartida extends javax.swing.JFrame {
             jpn_barraArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpn_barraArribaLayout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jpn_barraArribaLayout.setVerticalGroup(
             jpn_barraArribaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jpn_barraArribaLayout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -242,8 +276,8 @@ public class ventanaPartida extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jpn_barraArriba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jpn_barraArriba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -276,6 +310,7 @@ public class ventanaPartida extends javax.swing.JFrame {
             txf_ipRival.setEnabled(false);
             txf_puertoRival.setEnabled(false);
             enviarTablero(miTablero, ipRival, puertoRival);
+
         } else {
             txf_ipRival.setEnabled(true);
             txf_puertoRival.setEnabled(true);
@@ -288,6 +323,8 @@ public class ventanaPartida extends javax.swing.JFrame {
         tgb_guardarIPRival.setEnabled(true);
         btn_activarServidor.setEnabled(false);
         abrirHiloServidorParaObtenerTablero();
+
+
     }//GEN-LAST:event_btn_activarServidorActionPerformed
 
     /**
@@ -335,12 +372,15 @@ public class ventanaPartida extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jpn_barraArriba;
     private javax.swing.JPanel jpn_miTablero;
     private javax.swing.JPanel jpn_suTablero;
+    private javax.swing.JList<String> lst_barcosRestantes;
     private javax.swing.JToggleButton tgb_guardarIPRival;
     private javax.swing.JTextField txf_ipRival;
     private javax.swing.JTextField txf_puerto;
@@ -395,8 +435,6 @@ public class ventanaPartida extends javax.swing.JFrame {
                     // esquina arriba izquierda
                     JPanel panel = new JPanel();
                     panel.setName(fila + "-" + columna);
-//                    panel.setBackground(Color.LIGHT_GRAY);
-//                    panel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
                     jpn_suTablero.add(panel);
                 } else if (fila == 0 && columna > 0) {
                     //Linea de arriba (horizontal)
@@ -434,9 +472,11 @@ public class ventanaPartida extends javax.swing.JFrame {
                                         panelPulsado.setBackground(Color.blue);
                                     }
                                     enviarCasillaPulsada(fila + "-" + columna);
+                                    comprobarBarcos(fila + "-" + columna);
                                 }
                             }
                         }
+
                         @Override
                         public void mousePressed(MouseEvent e) {
 //                        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -466,6 +506,42 @@ public class ventanaPartida extends javax.swing.JFrame {
             jpn_suTablero.repaint();
         }
         jpn_suTablero.repaint();
+    }
+
+    private void comprobarBarcos(String casilla) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                listaCasillasPulsadas.add(casilla);
+                System.out.println("Comprobando casilla " + casilla);
+                for (int i = 2; i <= 5; i++) {// comprobar todos los barcos
+                    if (mapaBarcosEnemigos.get(i) != null) {// si no es nulo, es decir, no esta puesto
+                        System.out.println("Se comprobara el barco de " + i);
+                        int cantidadDeCasillasPulsadas = 0;
+                        int cantidadCasillas = mapaBarcosEnemigos.get(i).getPosiciones().length;
+                        String[] posiciones = mapaBarcosEnemigos.get(i).getPosiciones();
+                        for (int j = 0; j < cantidadCasillas; j++) {// recorrer el array de casillas que se han pulsado
+                            if (listaCasillasPulsadas.contains(posiciones[j])) {// si la posicion del barco esta en la lista
+                                cantidadDeCasillasPulsadas += 1;
+                            }
+                        }
+                        System.out.println("Casillas del barco " + cantidadCasillas + " cantidad de casillas pulsadas " + cantidadDeCasillasPulsadas);
+                        if (cantidadCasillas == cantidadDeCasillasPulsadas) {// si todas las casillas estan pulsadas
+                            JOptionPane.showMessageDialog(null, "Se ha hundido el barco " + mapaBarcosEnemigos.get(i).getPosiciones().length);
+                            ventanaMenu.sulistaDeBarcos.removeElement(mapaBarcosEnemigos.get(i));
+                            mapaBarcosEnemigos.remove(i);
+                            if (mapaBarcosEnemigos.isEmpty()) {
+                                JOptionPane.showMessageDialog(null, "Has ganado");
+
+                            }
+                        }
+                        cantidadDeCasillasPulsadas = 0;
+                    }
+                    System.out.println("No existe barco de " + i);
+                }
+            }
+        }).start();
+
     }
 
     private String obtenerLetraHorizontal(int columna) {
@@ -628,6 +704,7 @@ public class ventanaPartida extends javax.swing.JFrame {
                     servidor = new ServerSocket(Integer.parseInt(txf_puerto.getText()));
                     while (!tableroRivalObtenido) {
                         // Aceptamos conexion de un cliente
+                        System.out.println("Esperando nueva conexion para obtener tablero");
                         socket = servidor.accept();
                         System.out.println("Se ha conectado el equipo " + socket.getInetAddress());
                         din = new ObjectInputStream(socket.getInputStream());// leer lo que envia el cliente
@@ -660,7 +737,63 @@ public class ventanaPartida extends javax.swing.JFrame {
                         Logger.getLogger(ventanaPartida.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                System.out.println("Abriendo hilo lista barcos");
+                abrirHiloServidorParaObtenerListaDeBarcos();
                 cargarSuTablero();
+
+            }
+        }).start();
+    }
+
+    private void abrirHiloServidorParaObtenerListaDeBarcos() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ObjectInputStream din = null;
+                Socket socket = null;
+                try {
+                    servidorObtenerListaBarcos = new ServerSocket(Integer.parseInt(txf_puerto.getText()));
+                    // Aceptamos conexion de un cliente
+                    System.out.println("Esperando conexion");
+                    socket = servidorObtenerListaBarcos.accept();
+                    System.out.println("Se ha conectado el equipo " + socket.getInetAddress());
+                    din = new ObjectInputStream(socket.getInputStream());// leer lo que envia el cliente
+                    //Recibimos del cliente
+                    DefaultListModel listaBarcos = (DefaultListModel) din.readObject();
+                    System.out.println("Se ha obtenido la lista de barcos");
+                    //cargamos los barcos
+                    System.out.println(listaBarcos.size());
+                    for (int i = 0; i < listaBarcos.size(); i++) {
+                        Barco b = (Barco) listaBarcos.get(i);
+                        ventanaMenu.sulistaDeBarcos.addElement(b);
+//                        for (String posiciones : b.getPosiciones()) {
+//                            System.out.println(posiciones);
+//                        }
+//                        System.out.println(b.getPosiciones().length);
+                        mapaBarcosEnemigos.put(b.getPosiciones().length, b);
+
+                    }
+
+                } catch (IOException ex) {
+                    Logger.getLogger(ventanaPartida.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ventanaPartida.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        if (servidorObtenerListaBarcos != null) {
+                            servidorObtenerListaBarcos.close();
+                            System.out.println("Servidor obtener lista barcos cerrado");
+                        }
+                        if (socket != null) {
+                            socket.close();
+                        }
+                        if (din != null) {
+                            din.close();
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(ventanaPartida.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 abrirHiloServidorObtenerCasillaPulsada();
             }
         }).start();
@@ -753,6 +886,51 @@ public class ventanaPartida extends javax.swing.JFrame {
                         Logger.getLogger(ventanaPartida.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                try {
+                    Thread.sleep(1000);
+                    enviarListaBarcos(ipRival, puertoRival);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ventanaPartida.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }).start();
+    }
+
+    private void enviarListaBarcos(String ip, int puerto) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ObjectOutputStream dout = null;
+                Socket socket = null;
+
+                try {
+                    // Conexion con el servidor
+                    socket = new Socket(ip, puerto);
+
+                    dout = new ObjectOutputStream(socket.getOutputStream());// enviar al servidor
+
+                    System.out.println("Se va a mandar la lista de barcos");
+                    dout.writeObject(ventanaMenu.milistaDeBarcos);
+                    dout.flush();
+
+                } catch (IOException ex) {
+                    System.out.println("Puerto no abierto");
+                    Logger.getLogger(ventanaPartida.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        if (socket != null) {
+                            socket.close();
+                        }
+                        if (dout != null) {
+                            dout.close();
+                        }
+                    } catch (IOException ex) {
+
+                        Logger.getLogger(ventanaPartida.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
             }
         }).start();
     }

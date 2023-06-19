@@ -4,8 +4,11 @@
  */
 package hundirLaFlota;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 
 /**
@@ -19,6 +22,8 @@ public class ventanaMenu extends javax.swing.JFrame {
      */
     public static String[][] miTablero;
     public static String[][] suTablero;
+    public static DefaultListModel milistaDeBarcos = new DefaultListModel();
+    public static DefaultListModel sulistaDeBarcos = new DefaultListModel();
 
     public ventanaMenu() {
         initComponents();
@@ -151,6 +156,7 @@ public class ventanaMenu extends javax.swing.JFrame {
 
     private void btn_generarMiTableroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generarMiTableroActionPerformed
         // TODO add your handling code here:
+        milistaDeBarcos = new DefaultListModel();
         generarMiTablero ventana = new generarMiTablero();
         ventana.setVisible(true);
     }//GEN-LAST:event_btn_generarMiTableroActionPerformed
