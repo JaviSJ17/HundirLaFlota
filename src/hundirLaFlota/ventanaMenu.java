@@ -22,6 +22,7 @@ public class ventanaMenu extends javax.swing.JFrame {
      */
     public static String[][] miTablero;
     public static String[][] suTablero;
+    public static DefaultListModel listaBarcosEnemigos = new DefaultListModel();
     public static DefaultListModel milistaDeBarcos = new DefaultListModel();
     public static DefaultListModel sulistaDeBarcos = new DefaultListModel();
 

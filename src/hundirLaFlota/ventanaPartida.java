@@ -39,13 +39,17 @@ public class ventanaPartida extends javax.swing.JFrame {
      * Creates new form VentanaPrincipal
      */
     boolean servidorActivo = true;
+    
     String ipRival;
     int puertoRival;
     boolean tableroRivalObtenido = false;
     boolean puedeEnviarCasillaPulsada = true;
+    boolean juegoActivo = true;
     ServerSocket servidorObtenerListaBarcos = null;
     HashMap<Integer, Barco> mapaBarcosEnemigos = new HashMap<>();
-    ArrayList<String> listaCasillasPulsadas = new ArrayList<>();
+    HashMap<Integer, Barco> mapaMisBarcos = new HashMap<>();
+    ArrayList<String> listaCasillasPulsadasTableroEnemigo = new ArrayList<>();
+    ArrayList<String> listaCasillasPulsadasMiTablero = new ArrayList<>();
 
     public ventanaPartida() {
         initComponents();
@@ -54,6 +58,10 @@ public class ventanaPartida extends javax.swing.JFrame {
         cargarMiTablero();
         lst_barcosRestantes.setModel(ventanaMenu.sulistaDeBarcos);
 //        cargarSuTablero();
+        for (int i = 0; i < ventanaMenu.milistaDeBarcos.size(); i++) {
+            Barco b = (Barco) ventanaMenu.milistaDeBarcos.get(i);
+            mapaMisBarcos.put(b.getPosiciones().length, b);
+        }
     }
 
     /**
@@ -456,25 +464,28 @@ public class ventanaPartida extends javax.swing.JFrame {
                     panel.addMouseListener(new MouseListener() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            if (puedeEnviarCasillaPulsada) {
-                                Component comp = e.getComponent();
-                                if (comp instanceof JPanel) {
-                                    JPanel panelPulsado = (JPanel) comp;
+                            if (juegoActivo) {
+                                if (puedeEnviarCasillaPulsada) {
+                                    Component comp = e.getComponent();
+                                    if (comp instanceof JPanel) {
+                                        JPanel panelPulsado = (JPanel) comp;
 
-                                    String nombreComp = panelPulsado.getName();
-                                    String[] partes = nombreComp.split("-");
-                                    int fila = Integer.parseInt(partes[0]);
-                                    int columna = Integer.parseInt(partes[1]);
-                                    System.out.println("Click en su tablero en Fila " + fila + " columna " + columna);
-                                    if (ventanaMenu.suTablero[fila][columna].equalsIgnoreCase("barco")) {
-                                        panelPulsado.setBackground(Color.red);
-                                    } else if (ventanaMenu.suTablero[fila][columna].equalsIgnoreCase("agua")) {
-                                        panelPulsado.setBackground(Color.blue);
+                                        String nombreComp = panelPulsado.getName();
+                                        String[] partes = nombreComp.split("-");
+                                        int fila = Integer.parseInt(partes[0]);
+                                        int columna = Integer.parseInt(partes[1]);
+                                        System.out.println("Click en su tablero en Fila " + fila + " columna " + columna);
+                                        if (ventanaMenu.suTablero[fila][columna].equalsIgnoreCase("barco")) {
+                                            panelPulsado.setBackground(Color.red);
+                                        } else if (ventanaMenu.suTablero[fila][columna].equalsIgnoreCase("agua")) {
+                                            panelPulsado.setBackground(Color.blue);
+                                        }
+                                        enviarCasillaPulsada(fila + "-" + columna);
+                                        comprobarBarcosEnemigos(fila + "-" + columna);
                                     }
-                                    enviarCasillaPulsada(fila + "-" + columna);
-                                    comprobarBarcos(fila + "-" + columna);
                                 }
                             }
+
                         }
 
                         @Override
@@ -508,11 +519,28 @@ public class ventanaPartida extends javax.swing.JFrame {
         jpn_suTablero.repaint();
     }
 
-    private void comprobarBarcos(String casilla) {
+    private void cargarSuTableroRebelado() {
+        System.out.println("=========================================================================");
+        System.out.println("Rebelando mapa");
+        for (Component component : jpn_suTablero.getComponents()) {
+            if (component instanceof JPanel) {
+                JPanel panel = (JPanel) component;
+                System.out.println("Comprobando panel "+panel.getName());
+                if(ventanaMenu.listaBarcosEnemigos.contains(panel.getName())){
+                    System.out.println("    Rebelando...");
+                    panel.setBorder(BorderFactory.createLineBorder(Color.red, 1));
+                }
+            }
+        }
+        jpn_suTablero.revalidate();
+        jpn_suTablero.repaint();
+    }
+
+    private void comprobarBarcosEnemigos(String casilla) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                listaCasillasPulsadas.add(casilla);
+                listaCasillasPulsadasTableroEnemigo.add(casilla);
                 System.out.println("Comprobando casilla " + casilla);
                 for (int i = 2; i <= 5; i++) {// comprobar todos los barcos
                     if (mapaBarcosEnemigos.get(i) != null) {// si no es nulo, es decir, no esta puesto
@@ -521,7 +549,7 @@ public class ventanaPartida extends javax.swing.JFrame {
                         int cantidadCasillas = mapaBarcosEnemigos.get(i).getPosiciones().length;
                         String[] posiciones = mapaBarcosEnemigos.get(i).getPosiciones();
                         for (int j = 0; j < cantidadCasillas; j++) {// recorrer el array de casillas que se han pulsado
-                            if (listaCasillasPulsadas.contains(posiciones[j])) {// si la posicion del barco esta en la lista
+                            if (listaCasillasPulsadasTableroEnemigo.contains(posiciones[j])) {// si la posicion del barco esta en la lista
                                 cantidadDeCasillasPulsadas += 1;
                             }
                         }
@@ -532,12 +560,47 @@ public class ventanaPartida extends javax.swing.JFrame {
                             mapaBarcosEnemigos.remove(i);
                             if (mapaBarcosEnemigos.isEmpty()) {
                                 JOptionPane.showMessageDialog(null, "Has ganado");
-
+                                juegoActivo = false;
                             }
                         }
                         cantidadDeCasillasPulsadas = 0;
                     }
-                    System.out.println("No existe barco de " + i);
+                }
+            }
+        }).start();
+
+    }
+
+    private void comprobarMisBarcos(String casilla) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                listaCasillasPulsadasMiTablero.add(casilla);
+                System.out.println("Comprobando casilla " + casilla);
+                for (int i = 2; i <= 5; i++) {// comprobar todos los barcos
+                    if (mapaMisBarcos.get(i) != null) {// si no es nulo, es decir, no esta puesto
+                        System.out.println("Se comprobara el barco de " + i);
+                        int cantidadDeCasillasPulsadas = 0;
+                        int cantidadCasillas = mapaMisBarcos.get(i).getPosiciones().length;
+                        String[] posiciones = mapaMisBarcos.get(i).getPosiciones();
+                        for (int j = 0; j < cantidadCasillas; j++) {// recorrer el array de casillas que se han pulsado
+                            if (listaCasillasPulsadasMiTablero.contains(posiciones[j])) {// si la posicion del barco esta en la lista
+                                cantidadDeCasillasPulsadas += 1;
+                            }
+                        }
+                        System.out.println("Casillas del barco " + cantidadCasillas + " cantidad de casillas pulsadas " + cantidadDeCasillasPulsadas);
+                        if (cantidadCasillas == cantidadDeCasillasPulsadas) {// si todas las casillas estan pulsadas
+                            JOptionPane.showMessageDialog(null, "Se ha tu hundido el barco " + mapaMisBarcos.get(i).getPosiciones().length);
+                            ventanaMenu.sulistaDeBarcos.removeElement(mapaMisBarcos.get(i));
+                            mapaMisBarcos.remove(i);
+                            if (mapaMisBarcos.isEmpty()) {
+                                JOptionPane.showMessageDialog(null, "Has perdido");
+                                cargarSuTableroRebelado();
+                                juegoActivo = false;
+                            }
+                        }
+                        cantidadDeCasillasPulsadas = 0;
+                    }
                 }
             }
         }).start();
@@ -672,6 +735,7 @@ public class ventanaPartida extends javax.swing.JFrame {
     }
 
     private void casillaPulsadaEnMiTablero(int fila, int columna) {
+
         for (Component component : jpn_miTablero.getComponents()) {
             if (component instanceof JPanel) {
                 JPanel panel = (JPanel) component;
@@ -691,6 +755,7 @@ public class ventanaPartida extends javax.swing.JFrame {
         jpn_miTablero.revalidate();
         jpn_miTablero.repaint();
         puedeEnviarCasillaPulsada = true;
+        comprobarMisBarcos(fila + "-" + columna);
     }
 
     private void abrirHiloServidorParaObtenerTablero() {
@@ -766,14 +831,12 @@ public class ventanaPartida extends javax.swing.JFrame {
                     for (int i = 0; i < listaBarcos.size(); i++) {
                         Barco b = (Barco) listaBarcos.get(i);
                         ventanaMenu.sulistaDeBarcos.addElement(b);
-//                        for (String posiciones : b.getPosiciones()) {
-//                            System.out.println(posiciones);
-//                        }
-//                        System.out.println(b.getPosiciones().length);
+                        for (String posiciones : b.getPosiciones()) {
+                            ventanaMenu.listaBarcosEnemigos.addElement(posiciones);
+                        }
                         mapaBarcosEnemigos.put(b.getPosiciones().length, b);
 
                     }
-
                 } catch (IOException ex) {
                     Logger.getLogger(ventanaPartida.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
